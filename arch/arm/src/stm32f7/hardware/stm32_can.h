@@ -416,8 +416,7 @@
 /* TX mailbox identifier register */
 
 #define CAN_TIR_TXRQ              (1 << 0)  /* Bit 0: Transmit Mailbox Request */
-#define CAN_TIR_RTR               (1 << 1)  /* Bit 1: Remote Transmission Request */
-#define CAN_TIR_RTR_SHIFT         (1)       
+#define CAN_TIR_RTR               (1 << 1)  /* Bit 1: Remote Transmission Request */    
 #define CAN_TIR_IDE               (1 << 2)  /* Bit 2: Identifier Extension */
 #define CAN_TIR_EXID_SHIFT        (3)       /* Bit 3-31: Extended Identifier */
 #define CAN_TIR_EXID_MASK         (0x1fffffff << CAN_TIR_EXID_SHIFT)
