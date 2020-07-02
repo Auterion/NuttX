@@ -187,7 +187,7 @@ static ssize_t gpio_read(FAR struct file *filep, FAR char *buffer,
 
   /* Read the GPIO value */
 
-  ret = dev->gp_ops->go_read(dev, (FAR uint8_t *)&buffer[0]);
+  ret = dev->gp_ops->go_read(dev, (FAR bool *)&buffer[0]);
   if (ret < 0)
     {
       return ret;
@@ -544,6 +544,8 @@ int gpio_pin_register(FAR struct gpio_dev_s *dev, int minor)
   switch (dev->gp_pintype)
     {
       case GPIO_INPUT_PIN:
+      case GPIO_INPUT_PIN_PULLUP:
+      case GPIO_INPUT_PIN_PULLDOWN:
         {
           DEBUGASSERT(dev->gp_ops->go_read != NULL);
           fmt = "/dev/gpin%u";
@@ -551,6 +553,7 @@ int gpio_pin_register(FAR struct gpio_dev_s *dev, int minor)
         break;
 
       case GPIO_OUTPUT_PIN:
+      case GPIO_OUTPUT_PIN_OPENDRAIN:
         {
           DEBUGASSERT(dev->gp_ops->go_read != NULL &&
                      dev->gp_ops->go_write != NULL);

@@ -342,7 +342,7 @@ static int gplh_setpintype(FAR struct gpio_dev_s *gpio, enum gpio_pintype_e pint
     {
       return -EINVAL;
     }
-  else if (pintype == GPIO_OUTPUT_PIN)
+  else if (pintype == GPIO_OUTPUT_PIN) // TODO
     {
       IOEXP_SETDIRECTION(ioe, pin, IOEXPANDER_DIRECTION_OUT);
     }
