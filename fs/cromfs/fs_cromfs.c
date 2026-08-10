@@ -989,15 +989,27 @@ static ssize_t cromfs_read(FAR struct file *filep, FAR char *buffer,
 
               src     = (FAR const uint8_t *)currhdr + LZF_TYPE1_HDR_SIZE;
               voloffs = cromfs_addr2offset(fs, src);
+
+              /* NOTE: this path decompresses into the caller's buffer, not
+               * ff_buffer.  ff_offset therefore cannot be used to skip the
+               * work: a "hit" only means some *previous* caller's buffer was
+               * filled, leaving dest untouched while we still report success.
+               * Decompress via ff_buffer and copy, as the sibling branch
+               * below does, so ff_offset always describes ff_buffer.
+               */
+
               if (voloffs != ff->ff_offset)
                 {
                   unsigned int decomplen;
 
-                  decomplen = lzf_decompress(src, clen, dest, fs->cv_bsize);
+                  decomplen = lzf_decompress(src, clen, ff->ff_buffer,
+                                             fs->cv_bsize);
 
                   ff->ff_offset = voloffs;
                   ff->ff_ulen   = decomplen;
                 }
+
+              memcpy(dest, ff->ff_buffer, copysize);
 
               finfo("voloffs=%" PRIu32 " blkoffs=%" PRIu32
                     " ulen=%" PRIu16 " ff_offset=%" PRIu32 " copysize=%u\n",
